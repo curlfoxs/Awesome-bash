@@ -14,10 +14,11 @@ function pclip() {
 
 function h() {
     if [ -z "$1" ]; then
-        history | sed '1!G;h;$!d' | percol | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n' | pclip
+        cmd=$(history | sed '1!G;h;$!d' | percol.py | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n') 
     else
-        history | grep "$1" | sed '1!G;h;$!d' | percol | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n' | pclip
+        cmd=$(history | grep "$1" | sed '1!G;h;$!d' | percol.py | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n')
     fi
+    eval $cmd
 }
 ##
 # Global variable
@@ -67,8 +68,8 @@ export PS2="\[$ORANE\]->\[$RESET\]"
 # Alias
 ##
 alias cs="cd -"
-alias ls="ls -F"
-alias la="ls -al -F"
+alias ls="ls -F --color=auto"
+alias la="ls -al -F --color=auto"
 
 alias en="emacs -nw"
 alias grep="grep --color=auto"
