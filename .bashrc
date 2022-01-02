@@ -1,9 +1,9 @@
 #!/bin/bash
 # .bashrc
 
-##
+########
 # Helper function
-##
+########
 function parse_git_branch() {
     git rev-parse --abbrev-ref HEAD 2>/dev/null
 }
@@ -14,20 +14,33 @@ function pclip() {
 
 function h() {
     if [ -z "$1" ]; then
-        cmd=$(history | sed '1!G;h;$!d' | percol.py | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n') 
+        history | sed '1!G;h;$!d' | percol | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n' | pclip
     else
-        cmd=$(history | grep "$1" | sed '1!G;h;$!d' | percol.py | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n')
+        history | grep "$1" | sed '1!G;h;$!d' | percol | sed -n 's/^ *[0-9][0-9]* *\(.*\)$/\1/p'| tr -d '\n' | pclip
     fi
-    eval $cmd
 }
-##
-# Global variable
-##
+########
+## Global variable
+########
+export PATH=$PATH:/Users/oywl/bin:/Users/oywl/Library/Python/3.8/bin:/Users/oywl/.local/bin
+export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 export HISTSIZE=32768
+export DOTNET_ROOT="/usr/local/opt/dotnet/libexec"
+# Make the command-line history ignore duplicate command lines.
+export HISTCONTROL=erasedups:ignoredups
+########
+## Java enviroment
+########
+export CLASSPATH=$CLASSPATH:~/Git/Java/algs4-lib/algs4.jar
 
-##
-# Custom color
-##
+########
+## direnv hook
+########
+eval "$(direnv hook bash)"
+
+#######
+## Custom color
+#######
 #enables colorin the terminal bash shell export
 export CLICOLOR=1
 #setsup thecolor scheme for list export
@@ -64,12 +77,30 @@ export MANPAGER="less -X"
 export PS1="\[${BOLD}${MAGENTA}\]\u\[$RESET\]@\[$ORANGE\]\h\[$RESET\]:\[$GREEN\]\w\[$RESET\]\$(echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$RESET\]\n\[$RESET\]\$ "
 export PS2="\[$ORANE\]->\[$RESET\]"
 
-##
-# Alias
-##
-alias cs="cd -"
-alias ls="ls -F --color=auto"
-alias la="ls -al -F --color=auto"
+########
+## Alias
+########
 
-alias en="emacs -nw"
+alias cs="cd -"
+alias ls="ls -GF"
+alias la="ls -al -GF"
 alias grep="grep --color=auto"
+
+alias start-emacs="emacs --daemon"
+alias kill-emacs='emacsclient -e "(kill-emacs)"'
+alias e='emacsclient -t'
+# alias vim='emacsclient -t'
+# alias vi='emacsclient -t'
+
+alias python="python3"
+alias pip="pip3"
+
+alias find="find 2>/dev/null"
+
+# Establish a safe environment.
+set -o ignoreeof         # Do not log out with <Ctrl-D>.
+set -o noclobber         # Do not overwrite files via '>'.
+#alias rm='rm -i'         # Prompt before removing files via 'rm'.
+#alias cp='cp -i'         # Prompt before overwriting files via 'cp'.
+#alias mv='mv -i'         # Prompt before overwriting files via 'mv'.
+#alias ln='ln -i'         # Prompt before overwriting files via 'ln'.
